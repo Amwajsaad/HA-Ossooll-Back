@@ -2,16 +2,23 @@ using HA_Ossooll.Data.DTOs;
 using HA_Ossooll.Data.Models;
 using HA_Ossooll.Services.IService;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace HA_Ossooll.Services
 {
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(UserManager<ApplicationUser> userManager)
+        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         public async Task<AuthModel> RegisterAsync(RegisterModel model)
@@ -59,12 +66,42 @@ namespace HA_Ossooll.Services
                 return authModel;
             }
 
+            var jwtToken = CreateJwtToken(user);
+
             authModel.IsAuthenticated = true;
             authModel.Email = user.Email;
             authModel.Username = user.UserName;
             authModel.Message = "Login successful ✅";
+            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            authModel.ExpiresOn = jwtToken.ValidTo;
 
             return authModel;
+        }
+
+        private JwtSecurityToken CreateJwtToken(ApplicationUser user)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
+            };
+
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var jwtToken = new JwtSecurityToken(
+                issuer: _configuration["JWT:Issuer"],
+                audience: _configuration["JWT:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(double.Parse(_configuration["JWT:DurationInDays"])),
+                signingCredentials: creds
+            );
+
+            return jwtToken;
         }
     }
 }
