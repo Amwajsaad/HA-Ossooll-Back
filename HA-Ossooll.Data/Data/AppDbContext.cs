@@ -1,15 +1,12 @@
-﻿using HA_Ossooll.Data.Models;
+using HA_Ossooll.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace HA_Ossooll.Data.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public const string DBConnectionString = ConnectionString.TestString;
-
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
@@ -22,17 +19,6 @@ namespace HA_Ossooll.Data.Data
         public DbSet<Maintenance> Maintenances { get; set; }
         public DbSet<Operation> Operations { get; set; }
         public DbSet<OperationType> OperationTypes { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder builder)
-        {
-            if (!builder.IsConfigured)
-            {
-                builder.UseMySql(
-    DBConnectionString,
-    ServerVersion.AutoDetect(DBConnectionString)
-);
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
