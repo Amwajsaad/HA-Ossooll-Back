@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN dotnet restore
+RUN dotnet restore HA-Ossooll.API/HA-Ossooll.API.csproj
 RUN dotnet publish HA-Ossooll.API/HA-Ossooll.API.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
