@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "80"}");
+
 builder.Services.AddProjectDataLayer(builder.Configuration);
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -63,17 +65,15 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/", () => "API is running");
 app.MapControllers();
 
 app.Run();
