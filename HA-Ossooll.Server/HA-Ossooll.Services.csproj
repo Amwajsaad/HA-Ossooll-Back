@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ha-Ossooll.Data\Ha-Ossooll.Data.csproj" />
+    <ProjectReference Include="..\HA-Ossooll.Data\HA-Ossooll.Data.csproj" />
   </ItemGroup>
 
 </Project>
