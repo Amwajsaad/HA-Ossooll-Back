@@ -1,5 +1,5 @@
 <Solution>
   <Project Path="HA-Ossooll.API/HA-Ossooll.API.csproj" />
-  <Project Path="Ha-Ossooll.Data/Ha-Ossooll.Data.csproj" DisplayName="HA-Ossooll.Data" Id="186aaa42-1bcc-4356-b609-636d086feeb0" />
+  <Project Path="Ha-Ossooll.Data/HA-Ossooll.Data.csproj" DisplayName="HA-Ossooll.Data" Id="186aaa42-1bcc-4356-b609-636d086feeb0" />
   <Project Path="HA-Ossooll.Server/HA-Ossooll.Services.csproj" Id="181b495e-02b7-4c1f-a416-4854a14cd4ef" />
 </Solution>
